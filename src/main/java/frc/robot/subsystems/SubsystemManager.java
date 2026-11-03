@@ -297,7 +297,7 @@ public class SubsystemManager extends SubsystemBase {
 
 				intakeRackPosition = Math.max(
 					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX - 
-					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * shootTimer.get()),
+					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * (2 * ((9 * Math.pow(shootTimer.get() * 0.7 - 0.55, 3)) + 5 * Math.pow(shootTimer.get() * 0.7 - 0.55, 2)))),
 					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * 0.25);
 
 				intakeRack.setOverridePosition(intakeRackPosition);
@@ -341,7 +341,7 @@ public class SubsystemManager extends SubsystemBase {
 
 				intakeRackPosition = Math.max(
 					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX - 
-					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * shootTimer.get()),
+					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * (2 * ((9 * Math.pow(shootTimer.get() * 0.7 - 0.55, 3)) + 5 * Math.pow(shootTimer.get() * 0.7 - 0.55, 2)))),
 					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * 0.25);
 
 				intakeRack.setOverridePosition(intakeRackPosition);
@@ -371,7 +371,7 @@ public class SubsystemManager extends SubsystemBase {
 
 				intakeRackPosition = Math.max(
 					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX - 
-					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * shootTimer.get()),
+					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * (2 * ((9 * Math.pow(shootTimer.get() * 0.7 - 0.55, 3)) + 5 * Math.pow(shootTimer.get() * 0.7 - 0.55, 2)))),
 					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * 0.25);
 
 				intakeRack.setOverridePosition(intakeRackPosition);
@@ -401,7 +401,7 @@ public class SubsystemManager extends SubsystemBase {
 
 				intakeRackPosition = Math.max(
 					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX - 
-					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * shootTimer.get()),
+					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * (2 * ((9 * Math.pow(shootTimer.get() * 0.7 - 0.55, 3)) + 5 * Math.pow(shootTimer.get() * 0.7 - 0.55, 2)))),
 					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * 0.25);
 
 				intakeRack.setOverridePosition(intakeRackPosition);
@@ -431,7 +431,7 @@ public class SubsystemManager extends SubsystemBase {
 
 				intakeRackPosition = Math.max(
 					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX - 
-					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * shootTimer.get()),
+					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * (2 * ((9 * Math.pow(shootTimer.get() * 0.7 - 0.55, 3)) + 5 * Math.pow(shootTimer.get() * 0.7 - 0.55, 2)))),
 					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * 0.25);
 
 				intakeRack.setOverridePosition(intakeRackPosition);
