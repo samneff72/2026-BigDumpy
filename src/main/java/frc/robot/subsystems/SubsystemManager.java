@@ -9,6 +9,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.SuperstructureConstants;
 import frc.robot.subsystems.Autoaim.FiringLocation;
@@ -32,6 +33,8 @@ public class SubsystemManager extends SubsystemBase {
 	private final RollerFloor rollerFloor;
 	private final Shooter shooter;
 
+	private final CommandXboxController joystick;
+
 	public enum RobotState {
 		STOPPED,
 		IDLE,
@@ -53,7 +56,7 @@ public class SubsystemManager extends SubsystemBase {
 
 	public SubsystemManager(Autoaim autoaim,
 			Drivetrain drivetrain, Hood hood, Indexer indexer, IntakeRack intakeRack, IntakeRoller intakeRoller,
-			RollerFloor rollerFloor, Shooter shooter) {
+			RollerFloor rollerFloor, Shooter shooter, CommandXboxController joystick) {
 
 		this.autoaim = autoaim;
 
@@ -64,6 +67,8 @@ public class SubsystemManager extends SubsystemBase {
 		this.intakeRoller = intakeRoller;
 		this.rollerFloor = rollerFloor;
 		this.shooter = shooter;
+
+		this.joystick = joystick;
 
 		shootTimer.reset();
 	}
@@ -295,10 +300,7 @@ public class SubsystemManager extends SubsystemBase {
 					shootTimer.stop();
 				}
 
-				intakeRackPosition = Math.max(
-					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX - 
-					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * (2 * ((9 * Math.pow(shootTimer.get() * 0.7 - 0.55, 3)) + 5 * Math.pow(shootTimer.get() * 0.7 - 0.55, 2)))),
-					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * 0.25);
+				intakeRackPosition = getIntakeRackPositionWhileFiring();
 
 				intakeRack.setOverridePosition(intakeRackPosition);
 				intakeRack.setState(IntakeRackState.FOLLOW_OVERRIDE);
@@ -339,10 +341,7 @@ public class SubsystemManager extends SubsystemBase {
 					shootTimer.stop();
 				}
 
-				intakeRackPosition = Math.max(
-					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX - 
-					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * (2 * ((9 * Math.pow(shootTimer.get() * 0.7 - 0.55, 3)) + 5 * Math.pow(shootTimer.get() * 0.7 - 0.55, 2)))),
-					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * 0.25);
+				intakeRackPosition = getIntakeRackPositionWhileFiring();
 
 				intakeRack.setOverridePosition(intakeRackPosition);
 				intakeRack.setState(IntakeRackState.FOLLOW_OVERRIDE);
@@ -369,10 +368,7 @@ public class SubsystemManager extends SubsystemBase {
 					shootTimer.stop();
 				}
 
-				intakeRackPosition = Math.max(
-					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX - 
-					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * (2 * ((9 * Math.pow(shootTimer.get() * 0.7 - 0.55, 3)) + 5 * Math.pow(shootTimer.get() * 0.7 - 0.55, 2)))),
-					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * 0.25);
+				intakeRackPosition = getIntakeRackPositionWhileFiring();
 
 				intakeRack.setOverridePosition(intakeRackPosition);
 				intakeRack.setState(IntakeRackState.FOLLOW_OVERRIDE);
@@ -399,10 +395,7 @@ public class SubsystemManager extends SubsystemBase {
 					shootTimer.stop();
 				}
 
-				intakeRackPosition = Math.max(
-					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX - 
-					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * (2 * ((9 * Math.pow(shootTimer.get() * 0.7 - 0.55, 3)) + 5 * Math.pow(shootTimer.get() * 0.7 - 0.55, 2)))),
-					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * 0.25);
+				intakeRackPosition = getIntakeRackPositionWhileFiring();
 
 				intakeRack.setOverridePosition(intakeRackPosition);
 				intakeRack.setState(IntakeRackState.FOLLOW_OVERRIDE);
@@ -429,10 +422,7 @@ public class SubsystemManager extends SubsystemBase {
 					shootTimer.stop();
 				}
 
-				intakeRackPosition = Math.max(
-					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX - 
-					(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * (2 * ((9 * Math.pow(shootTimer.get() * 0.7 - 0.55, 3)) + 5 * Math.pow(shootTimer.get() * 0.7 - 0.55, 2)))),
-					SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * 0.25);
+				intakeRackPosition = getIntakeRackPositionWhileFiring();
 
 				intakeRack.setOverridePosition(intakeRackPosition);
 				intakeRack.setState(IntakeRackState.FOLLOW_OVERRIDE);
@@ -440,6 +430,17 @@ public class SubsystemManager extends SubsystemBase {
 
 			default:
 				break;
+		}
+	}
+
+	private double getIntakeRackPositionWhileFiring() {
+		if (joystick.leftTrigger().getAsBoolean()) {
+			return SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX;
+		} else {
+			return Math.max(
+				SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX - 
+				(SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * (2 * ((9 * Math.pow(shootTimer.get() * 0.7 - 0.55, 3)) + 5 * Math.pow(shootTimer.get() * 0.7 - 0.55, 2)))),
+				SuperstructureConstants.IntakeRackConstants.INTAKERACK_MAX * 0.25);
 		}
 	}
 }

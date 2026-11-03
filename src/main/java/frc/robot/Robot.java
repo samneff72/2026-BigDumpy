@@ -94,7 +94,7 @@ public class Robot extends LoggedRobot {
         this.visionIO = new VisionIOLimelights();
         this.vision = new Vision(visionIO, drivetrain);
 
-        subsystemManager = new SubsystemManager(autoaim, drivetrain, hood, indexer, intakeRack, intakeRoller, rollerFloor, shooter);
+        subsystemManager = new SubsystemManager(autoaim, drivetrain, hood, indexer, intakeRack, intakeRoller, rollerFloor, shooter, joystick);
 
         robotContainer = new RobotContainer(joystick, autoaim, subsystemManager, drivetrain, hood, indexer, intakeRack, intakeRoller, rollerFloor, shooter);
 
