@@ -118,7 +118,11 @@ public class Robot extends LoggedRobot {
         autoChooser.addRoutine("RT_DoubleSweepReturnSecondScoopShorter", autos::RT_DoubleSweepReturnSecondScoopShorter);
         autoChooser.addRoutine("LT_DoubleSweepReturnSecondScoopLoop", autos::LT_DoubleSweepReturnSecondScoopLoop);
         autoChooser.addRoutine("RT_DoubleSweepReturnSecondScoopLoop", autos::RT_DoubleSweepReturnSecondScoopLoop);
-
+        autoChooser.addRoutine("LToffset_DoubleSweepReturn", autos::LToffset_DoubleSweepReturn);
+        autoChooser.addRoutine("RToffset_DoubleSweepReturn", autos::RToffset_DoubleSweepReturn);
+        autoChooser.addRoutine("LB_SingleSweep", autos::LB_SingleSweep);
+        autoChooser.addRoutine("RB_SingleSweep", autos::RB_SingleSweep);
+        
         SmartDashboard.putNumber("AutoStartDelay", 0);
 
         RobotModeTriggers.autonomous().whileTrue(

@@ -263,6 +263,109 @@ public class Autos {
         return routine;
     }
 
+    public AutoRoutine LToffset_DoubleSweepReturn() {
+        
+        AutoRoutine routine = autoFactory.newRoutine("LToffset_DoubleSweepReturn");
+        AutoTrajectory path1 = routine.trajectory("LToffset_DoubleSweepReturn_1");
+        AutoTrajectory path2 = routine.trajectory("LT_DoubleSweepReturn_2");
+        AutoTrajectory path3 = routine.trajectory("LT_DoubleSweepReturn_3");
+
+        this.assignStandardCommandsToTrajectory(path1);
+        this.assignStandardCommandsToTrajectory(path2);
+        this.assignStandardCommandsToTrajectory(path3);
+
+        routine.active().onTrue(
+            Commands.sequence(
+                path1.resetOdometry(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path1.cmd(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_SCORING)),
+                Commands.waitSeconds(3),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path2.cmd(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_SCORING)),
+                Commands.waitSeconds(3),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path3.cmd()
+            )
+        );
+
+        return routine;
+    }
+
+    public AutoRoutine RToffset_DoubleSweepReturn() {
+        
+        AutoRoutine routine = autoFactory.newRoutine("RToffset_DoubleSweepReturn");
+        AutoTrajectory path1 = routine.trajectory("LToffset_DoubleSweepReturn_1").mirrorY();
+        AutoTrajectory path2 = routine.trajectory("LT_DoubleSweepReturn_2").mirrorY();
+        AutoTrajectory path3 = routine.trajectory("LT_DoubleSweepReturn_3").mirrorY();
+
+        this.assignStandardCommandsToTrajectory(path1);
+        this.assignStandardCommandsToTrajectory(path2);
+        this.assignStandardCommandsToTrajectory(path3);
+
+        routine.active().onTrue(
+            Commands.sequence(
+                path1.resetOdometry(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path1.cmd(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_SCORING)),
+                Commands.waitSeconds(3),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path2.cmd(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_SCORING)),
+                Commands.waitSeconds(3),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path3.cmd()
+            )
+        );
+
+        return routine;
+    }
+
+    
+    public AutoRoutine LB_SingleSweep() {
+        
+        AutoRoutine routine = autoFactory.newRoutine("LB_SingleSweep");
+        AutoTrajectory path1 = routine.trajectory("LB_DoubleSweepReturn_1");
+
+        this.assignStandardCommandsToTrajectory(path1);
+
+        routine.active().onTrue(
+            Commands.sequence(
+                path1.resetOdometry(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path1.cmd(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_SCORING)),
+                Commands.waitSeconds(3),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKEDEPLOYED))
+            )
+        );
+
+        return routine;
+    }
+
+    public AutoRoutine RB_SingleSweep() {
+        
+        AutoRoutine routine = autoFactory.newRoutine("RB_SingleSweep");
+        AutoTrajectory path1 = routine.trajectory("LB_DoubleSweepReturn_1").mirrorY();
+
+        this.assignStandardCommandsToTrajectory(path1);
+
+        routine.active().onTrue(
+            Commands.sequence(
+                path1.resetOdometry(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path1.cmd(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_SCORING)),
+                Commands.waitSeconds(3),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKEDEPLOYED))
+            )
+        );
+
+        return routine;
+    }
+
     public AutoRoutine M_Preload() {
         
         AutoRoutine routine = autoFactory.newRoutine("M_Preload");
