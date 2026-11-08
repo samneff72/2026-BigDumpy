@@ -116,12 +116,15 @@ public class Robot extends LoggedRobot {
         autoChooser.addRoutine("RT_DoubleSweepReturnSecondScoopCloseToHub", autos::RT_DoubleSweepReturnSecondScoopCloseToHub);
         autoChooser.addRoutine("LT_DoubleSweepReturnSecondScoopShorter", autos::LT_DoubleSweepReturnSecondScoopShorter);
         autoChooser.addRoutine("RT_DoubleSweepReturnSecondScoopShorter", autos::RT_DoubleSweepReturnSecondScoopShorter);
+        autoChooser.addRoutine("LT_DoubleSweepReturnSecondScoopSnake", autos::LT_DoubleSweepReturnSecondScoopSnake);
+        autoChooser.addRoutine("RT_DoubleSweepReturnSecondScoopSnake", autos::RT_DoubleSweepReturnSecondScoopSnake);
         autoChooser.addRoutine("LT_DoubleSweepReturnSecondScoopLoop", autos::LT_DoubleSweepReturnSecondScoopLoop);
         autoChooser.addRoutine("RT_DoubleSweepReturnSecondScoopLoop", autos::RT_DoubleSweepReturnSecondScoopLoop);
         autoChooser.addRoutine("LToffset_DoubleSweepReturn", autos::LToffset_DoubleSweepReturn);
         autoChooser.addRoutine("RToffset_DoubleSweepReturn", autos::RToffset_DoubleSweepReturn);
         autoChooser.addRoutine("LB_SingleSweep", autos::LB_SingleSweep);
         autoChooser.addRoutine("RB_SingleSweep", autos::RB_SingleSweep);
+        autoChooser.addRoutine("M_Preload", autos::M_Preload);
         
         SmartDashboard.putNumber("AutoStartDelay", 0);
 

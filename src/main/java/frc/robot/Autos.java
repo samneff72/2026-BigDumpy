@@ -203,6 +203,66 @@ public class Autos {
         return routine;
     }
 
+    public AutoRoutine LT_DoubleSweepReturnSecondScoopSnake() {
+        
+        AutoRoutine routine = autoFactory.newRoutine("LT_DoubleSweepReturnSecondScoopShorter");
+        AutoTrajectory path1 = routine.trajectory("LT_DoubleSweepReturn_1");
+        AutoTrajectory path2 = routine.trajectory("LT_DoubleSweepReturn_2_V5");
+        AutoTrajectory path3 = routine.trajectory("LT_DoubleSweepReturn_3");
+
+        this.assignStandardCommandsToTrajectory(path1);
+        this.assignStandardCommandsToTrajectory(path2);
+        this.assignStandardCommandsToTrajectory(path3);
+
+        routine.active().onTrue(
+            Commands.sequence(
+                path1.resetOdometry(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path1.cmd(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_SCORING)),
+                Commands.waitSeconds(3),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path2.cmd(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_SCORING)),
+                Commands.waitSeconds(3),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path3.cmd()
+            )
+        );
+
+        return routine;
+    }
+
+    public AutoRoutine RT_DoubleSweepReturnSecondScoopSnake() {
+        
+        AutoRoutine routine = autoFactory.newRoutine("RT_DoubleSweepReturnSecondScoopShorter");
+        AutoTrajectory path1 = routine.trajectory("LT_DoubleSweepReturn_1").mirrorY();
+        AutoTrajectory path2 = routine.trajectory("LT_DoubleSweepReturn_2_V5").mirrorY();
+        AutoTrajectory path3 = routine.trajectory("LT_DoubleSweepReturn_3").mirrorY();
+
+        this.assignStandardCommandsToTrajectory(path1);
+        this.assignStandardCommandsToTrajectory(path2);
+        this.assignStandardCommandsToTrajectory(path3);
+
+        routine.active().onTrue(
+            Commands.sequence(
+                path1.resetOdometry(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path1.cmd(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_SCORING)),
+                Commands.waitSeconds(3),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path2.cmd(),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_SCORING)),
+                Commands.waitSeconds(3),
+                Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_INTAKING)),
+                path3.cmd()
+            )
+        );
+
+        return routine;
+    }
+
     public AutoRoutine LT_DoubleSweepReturnSecondScoopLoop() {
         
         AutoRoutine routine = autoFactory.newRoutine("LT_DoubleSweepReturnSecondScoopLoop");
