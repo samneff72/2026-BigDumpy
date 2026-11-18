@@ -2,12 +2,12 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.interpolation.InterpolatingDoubleTreeMap;
+import org.wpilib.math.kinematics.ChassisVelocities;
+import org.wpilib.command2.SubsystemBase;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.SuperstructureConstants;
 
@@ -122,21 +122,19 @@ public class Autoaim extends SubsystemBase {
     }
 
     private double getDistanceToTargetWhileMoving(double ballTOF) {
-        ChassisSpeeds fieldRelativeSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
-                drivetrain.getState().Speeds, drivetrain.getState().Pose.getRotation());
+        ChassisVelocities fieldRelativeSpeeds = drivetrain.getState().Velocity.toFieldRelative(drivetrain.getState().Pose.getRotation());
 
         Translation2d velocityDisplacementOverTime = new Translation2d(
-            fieldRelativeSpeeds.vxMetersPerSecond * ballTOF, fieldRelativeSpeeds.vyMetersPerSecond * ballTOF);
+            fieldRelativeSpeeds.vx * ballTOF, fieldRelativeSpeeds.vy * ballTOF);
 
         return targetPose.minus(velocityDisplacementOverTime).getDistance(drivetrain.getState().Pose.getTranslation());
     }
 
     private Translation2d getDisplacedTarget(double ballTOF) {
-        ChassisSpeeds fieldRelativeSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
-                drivetrain.getState().Speeds, drivetrain.getState().Pose.getRotation());
+        ChassisVelocities fieldRelativeSpeeds = drivetrain.getState().Velocity.toFieldRelative(drivetrain.getState().Pose.getRotation());
 
         Translation2d velocityDisplacementOverTime = new Translation2d(
-            fieldRelativeSpeeds.vxMetersPerSecond * ballTOF, fieldRelativeSpeeds.vyMetersPerSecond * ballTOF);
+            fieldRelativeSpeeds.vx * ballTOF, fieldRelativeSpeeds.vy * ballTOF);
 
         return targetPose.minus(velocityDisplacementOverTime);
     }

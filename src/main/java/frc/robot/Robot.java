@@ -4,8 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
+import org.wpilib.system.RobotController;
 
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -16,13 +15,14 @@ import com.ctre.phoenix6.SignalLogger;
 
 import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
-import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import org.wpilib.system.Threads;
+import org.wpilib.tunable.TunableDouble;
+import org.wpilib.tunable.Tunables;
+import org.wpilib.command2.CommandScheduler;
+import org.wpilib.command2.Commands;
+import org.wpilib.command2.Command.InterruptionBehavior;
+import org.wpilib.command2.button.CommandXboxController;
+import org.wpilib.command2.button.RobotModeTriggers;
 
 import java.util.Set;
 import frc.robot.constants.TunerConstants;
@@ -69,8 +69,6 @@ public class Robot extends LoggedRobot {
 
         Logger.addDataReceiver(new WPILOGWriter());
         Logger.addDataReceiver(new NT4Publisher()); 
-
-        DriverStation.silenceJoystickConnectionWarning(true);
 
         SignalLogger.enableAutoLogging(false);
 
@@ -126,20 +124,20 @@ public class Robot extends LoggedRobot {
         autoChooser.addRoutine("RB_SingleSweep", autos::RB_SingleSweep);
         autoChooser.addRoutine("M_Preload", autos::M_Preload);
         
-        SmartDashboard.putNumber("AutoStartDelay", 0);
+        TunableDouble autoStartDelay = Tunables.addDouble("AutoStartDelay", 0.0);
 
         RobotModeTriggers.autonomous().whileTrue(
             Commands.defer(
                 () -> Commands.waitSeconds(
-                        Math.max(0.0, SmartDashboard.getNumber("AutoStartDelay", 0.0)))
+                        Math.max(0.0, autoStartDelay.get()))
                     .andThen(autoChooser.selectedCommandScheduler())
-                    .withInterruptBehavior(InterruptionBehavior.kCancelIncoming),
+                    .withInterruptBehavior(InterruptionBehavior.CANCEL_INCOMING),
                 Set.of()));
         RobotModeTriggers.autonomous().onTrue(Commands.waitSeconds(0.2).andThen(Commands.run(() -> vision.enableVision())));
 
-        SmartDashboard.putData("AutoChooser", autoChooser);
+        Tunables.publish("AutoChooser", autoChooser);
 
-        Threads.setCurrentThreadPriority(true, 5);
+        Threads.setCurrentThreadPriority(5);
 
         Logger.start();
 
@@ -165,10 +163,10 @@ public class Robot extends LoggedRobot {
         Logger.recordOutput("HubShift/Official", latestShiftInfo);
         Logger.recordOutput("BatteryVoltage", RobotController.getBatteryVoltage());
 
-        SmartDashboard.putString("Current Shift", latestShiftInfo.currentShift().toString());
-        // SmartDashboard.putNumber("Elapsed Time", latestShiftInfo.elapsedTime());
-        SmartDashboard.putNumber("Remaining Time", latestShiftInfo.remainingTime());
-        SmartDashboard.putBoolean("Shift Active", latestShiftInfo.active());
+        Logger.recordOutput("Current Shift", latestShiftInfo.currentShift().toString());
+        // Logger.recordOutput("Elapsed Time", latestShiftInfo.elapsedTime());
+        Logger.recordOutput("Remaining Time", latestShiftInfo.remainingTime());
+        Logger.recordOutput("Shift Active", latestShiftInfo.active());
     }
 
     @Override
@@ -209,15 +207,15 @@ public class Robot extends LoggedRobot {
     public void teleopExit() {}
 
     @Override
-    public void testInit() {
+    public void utilityInit() {
         CommandScheduler.getInstance().cancelAll();
     }
 
     @Override
-    public void testPeriodic() {}
+    public void utilityPeriodic() {}
 
     @Override
-    public void testExit() {}
+    public void utilityExit() {}
 
     @Override
     public void simulationPeriodic() {}

@@ -1,8 +1,11 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
+import org.wpilib.driverstation.RobotState;
+import org.wpilib.driverstation.MatchState;
+
+import static org.wpilib.units.Units.MetersPerSecond;
+import static org.wpilib.units.Units.RadiansPerSecond;
+import static org.wpilib.units.Units.RotationsPerSecond;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -21,18 +24,18 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import choreo.trajectory.SwerveSample;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import org.wpilib.math.linalg.Matrix;
+import org.wpilib.math.controller.PIDController;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.system.Timer;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.kinematics.ChassisVelocities;
+import org.wpilib.math.numbers.N1;
+import org.wpilib.math.numbers.N3;
+import org.wpilib.driverstation.Alliance;
+import org.wpilib.command2.Command;
+import org.wpilib.command2.Subsystem;
+import org.wpilib.command2.button.CommandXboxController;
 import frc.robot.constants.TunerConstants;
 
 /**
@@ -66,7 +69,7 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
     private Pose2d targetPose = new Pose2d();
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
-    private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
+    private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.ZERO;
     /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
     private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
     /* Keep track if we've ever applied the operator perspective before or not */
@@ -85,18 +88,18 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
         .withSteerRequestType(SteerRequestType.Position);
 
-    private final SwerveRequest.ApplyRobotSpeeds applyRobotRelativeSpeeds = 
-        new SwerveRequest.ApplyRobotSpeeds()
+    private final SwerveRequest.ApplyRobotVelocity applyRobotRelativeSpeeds = 
+        new SwerveRequest.ApplyRobotVelocity()
             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
             .withSteerRequestType(SwerveModule.SteerRequestType.Position);
 
-    private final SwerveRequest.ApplyFieldSpeeds applyFieldRelativeSpeeds =
-        new SwerveRequest.ApplyFieldSpeeds()
+    private final SwerveRequest.ApplyFieldVelocity applyFieldRelativeSpeeds =
+        new SwerveRequest.ApplyFieldVelocity()
             .withDriveRequestType(DriveRequestType.Velocity)
             .withSteerRequestType(SteerRequestType.Position);
 
-    public final SwerveRequest.ApplyFieldSpeeds pathApplyFieldSpeeds =
-        new SwerveRequest.ApplyFieldSpeeds()
+    public final SwerveRequest.ApplyFieldVelocity pathApplyFieldSpeeds =
+        new SwerveRequest.ApplyFieldVelocity()
             .withDriveRequestType(DriveRequestType.Velocity)
             .withSteerRequestType(SteerRequestType.Position);
 
@@ -174,7 +177,7 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
             double vy = yController.calculate(currentPose.getY(), targetPose.getY());
             double vomega = headingController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
 
-            this.setControl(applyFieldRelativeSpeeds.withSpeeds(new ChassisSpeeds(vx, vy, vomega)));
+            this.setControl(applyFieldRelativeSpeeds.withVelocity(new ChassisVelocities(vx, vy, vomega)));
     }
 
     private void runPIDToAngle(Rotation2d angle) {
@@ -184,7 +187,7 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
             // if (Math.abs(currentRot.relativeTo(angle).getDegrees()) < 2) {
             //     this.setControl(XBrake);
             // } else {
-                this.setControl(applyFieldRelativeSpeeds.withSpeeds(new ChassisSpeeds(0, 0, vomega)));
+                this.setControl(applyFieldRelativeSpeeds.withVelocity(new ChassisVelocities(0, 0, vomega)));
             // }
     }
 
@@ -192,7 +195,7 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
         Rotation2d currentRot = this.getPose().getRotation();
         double vomega = headingController.calculate(currentRot.getRadians(), angle.getRadians());
 
-        this.setControl(applyFieldRelativeSpeeds.withSpeeds(new ChassisSpeeds(vxMPS, vyMPS, vomega)));
+        this.setControl(applyFieldRelativeSpeeds.withVelocity(new ChassisVelocities(vxMPS, vyMPS, vomega)));
     }
 
     public boolean atAngleToScore() {
@@ -201,7 +204,7 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
 
     public void periodicRun() {
 
-        Logger.recordOutput("Drivetrain/RobotRelativeSpeeds", this.getState().Speeds);
+        Logger.recordOutput("Drivetrain/RobotRelativeSpeeds", this.getState().Velocity);
         Logger.recordOutput("Drivetrain/RobotPose", this.getState().Pose);
 
         Logger.recordOutput("Drivetrain/TargetPose", this.getTargetPose());
@@ -214,10 +217,10 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
 
         Logger.recordOutput("Autoaim/DrivetrainAtAngleToScore", this.atAngleToScore());
 
-        if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
-            DriverStation.getAlliance().ifPresent(allianceColor -> {
-                setOperatorPerspectiveForward(
-                allianceColor == Alliance.Red
+        if (!m_hasAppliedOperatorPerspective || RobotState.isDisabled()) {
+            MatchState.getAlliance().ifPresent(allianceColor -> {
+                setOperatorForwardDirection(
+                allianceColor == Alliance.RED
                 ? kRedAlliancePerspectiveRotation
                 : kBlueAlliancePerspectiveRotation
                 );
@@ -227,7 +230,7 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
 
         switch (state) {
             case STOP:
-                this.setControl(applyRobotRelativeSpeeds.withSpeeds(new ChassisSpeeds(0, 0, 0)));
+                this.setControl(applyRobotRelativeSpeeds.withVelocity(new ChassisVelocities(0, 0, 0)));
                 break;
 
             case IDLE:
@@ -267,7 +270,7 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
                 break;
 
             default:
-                this.setControl(applyRobotRelativeSpeeds.withSpeeds(new ChassisSpeeds(0, 0, 0)));
+                this.setControl(applyRobotRelativeSpeeds.withVelocity(new ChassisVelocities(0, 0, 0)));
                 break;
         }
     }
@@ -284,7 +287,7 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
      */
     @Override
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
-        super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds));
+        super.addVisionMeasurement(visionRobotPoseMeters, toCurrentTime(timestampSeconds));
     }
 
     /**
@@ -310,7 +313,7 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
             Pose2d visionRobotPoseMeters,
             double timestampSeconds,
             Matrix<N3, N1> visionMeasurementStdDevs) {
-        super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds),
+        super.addVisionMeasurement(visionRobotPoseMeters, toCurrentTime(timestampSeconds),
                 visionMeasurementStdDevs);
     }
 
@@ -323,7 +326,17 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
      */
     @Override
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
-        return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
+        return super.samplePoseAt(toCurrentTime(timestampSeconds));
+    }
+
+    /**
+     * Converts a timestamp in the WPILib time base ({@link Timer#getTimestamp()}, which is what
+     * NetworkTables/Limelight timestamps use) into the Phoenix 6 time base
+     * ({@link Utils#getCurrentTimeSeconds()}) expected by the swerve pose estimator.
+     * Replaces {@code Utils.fpgaToCurrentTime}, which was removed along with the roboRIO FPGA.
+     */
+    private static double toCurrentTime(double timestampSeconds) {
+        return Utils.getCurrentTimeSeconds() - (Timer.getTimestamp() - timestampSeconds);
     }
 
     public void followTrajectory(SwerveSample sample) {
@@ -333,7 +346,7 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
         Pose2d pose = getPose();
 
         // Generate the next speeds for the robot
-        ChassisSpeeds speeds = new ChassisSpeeds(
+        ChassisVelocities speeds = new ChassisVelocities(
             sample.vx + xControllerChoreo.calculate(pose.getX(), sample.x),
             sample.vy + yControllerChoreo.calculate(pose.getY(), sample.y),
             sample.omega + headingControllerChoreo.calculate(pose.getRotation().getRadians(), sample.heading)
@@ -342,6 +355,6 @@ public class Drivetrain extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> imp
         targetPose = sample.getPose();
 
         // Apply the generated speeds
-        this.setControl(applyFieldRelativeSpeeds.withSpeeds(speeds));
+        this.setControl(applyFieldRelativeSpeeds.withVelocity(speeds));
     }
 }

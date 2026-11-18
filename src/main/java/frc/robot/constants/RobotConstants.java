@@ -1,20 +1,33 @@
 package frc.robot.constants;
 
+import org.wpilib.driverstation.RobotState;
+import org.wpilib.driverstation.MatchState;
+
 import java.util.function.BooleanSupplier;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
+import com.ctre.phoenix6.CANBus;
+import org.wpilib.hardware.bus.CANPort;
+
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.driverstation.Alliance;
 
 public class RobotConstants {
 
+    /**
+     * SystemCore CAN port for the superstructure TalonFXs. On the roboRIO these used the default
+     * "rio" bus; SystemCore has no default, so each device must name a port (CAN_S0..CAN_S4).
+     * TODO: confirm which SystemCore port the superstructure CAN chain is wired to.
+     */
+    public static final CANBus kSystemCoreCAN = new CANBus(CANPort.CAN_S0);
+
     public static BooleanSupplier isRedAlliance = () -> {
-        var alliance = DriverStation.getAlliance();
-        return alliance.filter(value -> value == DriverStation.Alliance.Red).isPresent();
+        var alliance = MatchState.getAlliance();
+        return alliance.filter(value -> value == Alliance.RED).isPresent();
     };
 
     public static BooleanSupplier isAuto = () -> {
-        return DriverStation.isAutonomousEnabled();
+        return RobotState.isAutonomousEnabled();
     };
 
     public static class Vision {
@@ -38,22 +51,22 @@ public class RobotConstants {
         public static final double PASSING_SWAP_TARGET_POSE_Y_TOP = 5;
         public static final double PASSING_SWAP_TARGET_Y_BOTTOM = 3;
         
-        public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.626, 4.035, Rotation2d.kZero);
-        public static final Pose2d RED_HUB_POSE = new Pose2d(11.914, 4.035, Rotation2d.kZero);
+        public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.626, 4.035, Rotation2d.ZERO);
+        public static final Pose2d RED_HUB_POSE = new Pose2d(11.914, 4.035, Rotation2d.ZERO);
 
-        public static final Pose2d BLUE_PASS_SHOT_HIGH_POSE = new Pose2d(3, 5.4, Rotation2d.kZero);
-        public static final Pose2d BLUE_PASS_SHOT_LOW_POSE = new Pose2d(3, 2, Rotation2d.kZero);
+        public static final Pose2d BLUE_PASS_SHOT_HIGH_POSE = new Pose2d(3, 5.4, Rotation2d.ZERO);
+        public static final Pose2d BLUE_PASS_SHOT_LOW_POSE = new Pose2d(3, 2, Rotation2d.ZERO);
 
-        public static final Pose2d BLUE_PASS_SHOT_HIGH_POSE_BEHIND_HUB = new Pose2d(3, 6.4, Rotation2d.kZero);
-        public static final Pose2d BLUE_PASS_SHOT_LOW_POSE_BEHIND_HUB = new Pose2d(3, 1.7, Rotation2d.kZero);
+        public static final Pose2d BLUE_PASS_SHOT_HIGH_POSE_BEHIND_HUB = new Pose2d(3, 6.4, Rotation2d.ZERO);
+        public static final Pose2d BLUE_PASS_SHOT_LOW_POSE_BEHIND_HUB = new Pose2d(3, 1.7, Rotation2d.ZERO);
 
-        public static final Pose2d RED_PASS_SHOT_HIGH_POSE = new Pose2d(13.54175, 5.4, Rotation2d.kZero);
-        public static final Pose2d RED_PASS_SHOT_LOW_POSE = new Pose2d(13.54175, 2.6, Rotation2d.kZero);
+        public static final Pose2d RED_PASS_SHOT_HIGH_POSE = new Pose2d(13.54175, 5.4, Rotation2d.ZERO);
+        public static final Pose2d RED_PASS_SHOT_LOW_POSE = new Pose2d(13.54175, 2.6, Rotation2d.ZERO);
         
-        public static final Pose2d RED_PASS_SHOT_HIGH_POSE_BEHIND_HUB = new Pose2d(13.54175, 6.4, Rotation2d.kZero);
-        public static final Pose2d RED_PASS_SHOT_LOW_POSE_BEHIND_HUB = new Pose2d(13.54175, 1.7, Rotation2d.kZero);
+        public static final Pose2d RED_PASS_SHOT_HIGH_POSE_BEHIND_HUB = new Pose2d(13.54175, 6.4, Rotation2d.ZERO);
+        public static final Pose2d RED_PASS_SHOT_LOW_POSE_BEHIND_HUB = new Pose2d(13.54175, 1.7, Rotation2d.ZERO);
 
-        public static final Pose2d OUTPOST_BLUE = new Pose2d(2.885, 0.933, Rotation2d.kZero);
-        public static final Pose2d OUTPUT_RED = new Pose2d(14.392, 7.379, Rotation2d.kZero);
+        public static final Pose2d OUTPOST_BLUE = new Pose2d(2.885, 0.933, Rotation2d.ZERO);
+        public static final Pose2d OUTPUT_RED = new Pose2d(14.392, 7.379, Rotation2d.ZERO);
     }
 }

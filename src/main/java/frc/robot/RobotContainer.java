@@ -4,10 +4,10 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.MetersPerSecond;
+import static org.wpilib.units.Units.MetersPerSecond;
 
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import org.wpilib.command2.Commands;
+import org.wpilib.command2.button.CommandXboxController;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.Autoaim;
 import frc.robot.subsystems.Drivetrain;
@@ -104,7 +104,7 @@ public class RobotContainer {
                 .onlyIf(() -> !subsystemManager.isFiring())
         );
 
-        joystick.povUp().onTrue(
+        joystick.dpadUp().onTrue(
             Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_SCORING_TOWER_PRESET), subsystemManager)
         ).onFalse(
             Commands.either(            
@@ -114,7 +114,7 @@ public class RobotContainer {
             )        
         );
 
-        joystick.povRight().onTrue(
+        joystick.dpadRight().onTrue(
             Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_SCORING_TRENCH_PRESET), subsystemManager)
         ).onFalse(
             Commands.either(            
@@ -136,9 +136,9 @@ public class RobotContainer {
 
         joystick.y().onTrue(Commands.runOnce(() -> subsystemManager.setRobotState(RobotState.DRIVING_IDLE), subsystemManager));
        
-        joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric).ignoringDisable(true));
+        joystick.menu().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric).ignoringDisable(true));
 
-        joystick.back().onTrue(Commands.runOnce(() -> intakeRack.zeroMotors()).ignoringDisable(true));
+        joystick.view().onTrue(Commands.runOnce(() -> intakeRack.zeroMotors()).ignoringDisable(true));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

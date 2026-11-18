@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.constants.RobotConstants;
+
 import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -15,17 +17,17 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.math.filter.SlewRateLimiter;
+import org.wpilib.command2.SubsystemBase;
 import frc.robot.MotorLogUtil;
 import frc.robot.constants.SuperstructureConstants;
 
 public class Shooter extends SubsystemBase {
 
-	private TalonFX topLeftMotorLeader = new TalonFX(SuperstructureConstants.IDs.SHOOTER_TOP_LEFT_MOTOR_ID);
-	private TalonFX bottomLeftMotor = new TalonFX(SuperstructureConstants.IDs.SHOOTER_BOTTOM_LEFT_MOTOR_ID);
-	private TalonFX topRightMotor = new TalonFX(SuperstructureConstants.IDs.SHOOTER_TOP_RIGHT_MOTOR_ID);
-	private TalonFX bottomRightMotor = new TalonFX(SuperstructureConstants.IDs.SHOOTER_BOTTOM_RIGHT_MOTOR_ID);
+	private TalonFX topLeftMotorLeader = new TalonFX(SuperstructureConstants.IDs.SHOOTER_TOP_LEFT_MOTOR_ID, RobotConstants.kSystemCoreCAN);
+	private TalonFX bottomLeftMotor = new TalonFX(SuperstructureConstants.IDs.SHOOTER_BOTTOM_LEFT_MOTOR_ID, RobotConstants.kSystemCoreCAN);
+	private TalonFX topRightMotor = new TalonFX(SuperstructureConstants.IDs.SHOOTER_TOP_RIGHT_MOTOR_ID, RobotConstants.kSystemCoreCAN);
+	private TalonFX bottomRightMotor = new TalonFX(SuperstructureConstants.IDs.SHOOTER_BOTTOM_RIGHT_MOTOR_ID, RobotConstants.kSystemCoreCAN);
 
 	private Follower followerOpposed = new Follower(SuperstructureConstants.IDs.SHOOTER_TOP_LEFT_MOTOR_ID, MotorAlignmentValue.Opposed);
 	private Follower followerAligned = new Follower(SuperstructureConstants.IDs.SHOOTER_TOP_LEFT_MOTOR_ID, MotorAlignmentValue.Aligned);

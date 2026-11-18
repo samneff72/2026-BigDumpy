@@ -1,7 +1,7 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Fahrenheit;
+import static org.wpilib.units.Units.Amps;
+import static org.wpilib.units.Units.Fahrenheit;
 
 import org.littletonrobotics.junction.Logger;
 

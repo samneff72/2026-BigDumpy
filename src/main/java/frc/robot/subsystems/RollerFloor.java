@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.constants.RobotConstants;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.StatusCode;
@@ -13,14 +15,14 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.command2.SubsystemBase;
 import frc.robot.MotorLogUtil;
 import frc.robot.constants.SuperstructureConstants;
 
 public class RollerFloor extends SubsystemBase {
 
-	private TalonFX leftMotorLeader = new TalonFX(SuperstructureConstants.IDs.ROLLERFLOOR_LEFT_MOTOR_ID);
-	private TalonFX rightMotor = new TalonFX(SuperstructureConstants.IDs.ROLLERFLOOR_RIGHT_MOTOR_ID);
+	private TalonFX leftMotorLeader = new TalonFX(SuperstructureConstants.IDs.ROLLERFLOOR_LEFT_MOTOR_ID, RobotConstants.kSystemCoreCAN);
+	private TalonFX rightMotor = new TalonFX(SuperstructureConstants.IDs.ROLLERFLOOR_RIGHT_MOTOR_ID, RobotConstants.kSystemCoreCAN);
 
 	private Follower followerOpposed = new Follower(SuperstructureConstants.IDs.ROLLERFLOOR_LEFT_MOTOR_ID, MotorAlignmentValue.Opposed);
 

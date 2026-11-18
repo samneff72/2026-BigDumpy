@@ -6,10 +6,10 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.system.Timer;
+import org.wpilib.command2.SubsystemBase;
+import org.wpilib.command2.button.CommandXboxController;
 import frc.robot.constants.RobotConstants;
 import frc.robot.constants.SuperstructureConstants;
 import frc.robot.subsystems.Autoaim.FiringLocation;

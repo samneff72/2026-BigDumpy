@@ -7,9 +7,11 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Timer;
+import org.wpilib.driverstation.RobotState;
+import org.wpilib.driverstation.MatchState;
+
+import org.wpilib.driverstation.Alliance;
+import org.wpilib.system.Timer;
 
 public class HubShiftUtil {
     public enum ShiftEnum {
@@ -40,21 +42,21 @@ public class HubShiftUtil {
     private static double shiftTimerOffset = 0.0;
 
     public static Alliance getFirstActiveAlliance() {
-        var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+        var alliance = MatchState.getAlliance().orElse(Alliance.BLUE);
 
         // Return FMS value
-        String message = DriverStation.getGameSpecificMessage();
+        String message = MatchState.getGameData().orElse("");
         if (message.length() > 0) {
             char character = message.charAt(0);
             if (character == 'R') {
-                return Alliance.Blue;
+                return Alliance.BLUE;
             } else if (character == 'B') {
-                return Alliance.Red;
+                return Alliance.RED;
             }
         }
 
         // Return default value
-        return alliance == Alliance.Blue ? Alliance.Red : Alliance.Blue;
+        return alliance == Alliance.BLUE ? Alliance.RED : Alliance.BLUE;
     }
 
     /**
@@ -69,7 +71,7 @@ public class HubShiftUtil {
         boolean[] currentSchedule;
         Alliance startAlliance = getFirstActiveAlliance();
         currentSchedule =
-                startAlliance == DriverStation.getAlliance().orElse(Alliance.Blue)
+                startAlliance == MatchState.getAlliance().orElse(Alliance.BLUE)
                         ? activeSchedule
                         : inactiveSchedule;
         return currentSchedule;
@@ -83,18 +85,18 @@ public class HubShiftUtil {
         double stateTimeRemaining = 0.0;
         boolean active = false;
         ShiftEnum currentShift = ShiftEnum.DISABLED;
-        double fieldTeleopTime = 140.0 - DriverStation.getMatchTime();
+        double fieldTeleopTime = 140.0 - MatchState.getMatchTime();
 
-        if (DriverStation.isAutonomousEnabled()) {
+        if (RobotState.isAutonomousEnabled()) {
             stateTimeElapsed = currentTime;
             stateTimeRemaining = autoEndTime - currentTime;
             active = true;
             currentShift = ShiftEnum.AUTO;
-        } else if (DriverStation.isEnabled()) {
+        } else if (RobotState.isEnabled()) {
             // Adjust the current offset if the time difference above the theshold
             if (Math.abs(fieldTeleopTime - currentTime) >= timeResetThreshold
                     && fieldTeleopTime <= 135
-                    && DriverStation.isFMSAttached()) {
+                    && RobotState.isFMSAttached()) {
                 shiftTimerOffset += currentTime - fieldTeleopTime;
                 currentTime = timerValue + shiftTimerOffset;
             }

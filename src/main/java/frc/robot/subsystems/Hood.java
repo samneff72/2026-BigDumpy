@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.constants.RobotConstants;
+
 import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -13,13 +15,13 @@ import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.command2.SubsystemBase;
 import frc.robot.MotorLogUtil;
 import frc.robot.constants.SuperstructureConstants;
 
 public class Hood extends SubsystemBase {
 
-	private TalonFX motor = new TalonFX(SuperstructureConstants.IDs.HOOD_MOTOR_ID);
+	private TalonFX motor = new TalonFX(SuperstructureConstants.IDs.HOOD_MOTOR_ID, RobotConstants.kSystemCoreCAN);
 
 	private MotionMagicExpoVoltage positionControl = new MotionMagicExpoVoltage(0);
 

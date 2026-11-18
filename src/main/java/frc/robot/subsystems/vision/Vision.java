@@ -1,13 +1,13 @@
 package frc.robot.subsystems.vision;
 
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.wpilib.math.linalg.VecBuilder;
+import org.wpilib.math.linalg.Vector;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.numbers.N3;
+import org.wpilib.units.Units;
+import org.wpilib.system.Timer;
+import org.wpilib.command2.SubsystemBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.vision.VisionIO.VisionIOInputs;
 
@@ -38,7 +38,7 @@ public class Vision extends SubsystemBase {
         double timestamp = Timer.getTimestamp();
         SwerveDrivetrain.SwerveDriveState lastDriveState = this.drivetrain.getState();
         inputs.robotYawDegrees = lastDriveState.Pose.getRotation().getMeasure().in(Units.Degree);
-        inputs.robotYawRateDegreesPerSecond = Math.toDegrees(lastDriveState.Speeds.omegaRadiansPerSecond);
+        inputs.robotYawRateDegreesPerSecond = Math.toDegrees(lastDriveState.Velocity.omega);
         inputs.robotRollDegrees = this.drivetrain.getPigeon2().getRoll().getValue().in(Units.Degree);
         inputs.robotRollRateDegreesPerSecond = 0;
         inputs.robotPitchDegrees = this.drivetrain.getPigeon2().getPitch().getValue().in(Units.Degree);
@@ -49,7 +49,7 @@ public class Vision extends SubsystemBase {
 
         boolean reject = false;
 
-        if (Math.abs(lastDriveState.Speeds.omegaRadiansPerSecond) > 3) {
+        if (Math.abs(lastDriveState.Velocity.omega) > 3) {
             reject = true;
         }
 
